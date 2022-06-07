@@ -7,6 +7,7 @@ module Mdm::Module
   autoload :Author
   autoload :Detail
   autoload :Mixin
+  autoload :Note
   autoload :Platform
   autoload :Ref
   autoload :Target

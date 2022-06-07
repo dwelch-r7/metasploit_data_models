@@ -63,7 +63,7 @@ class Mdm::Module::Detail < ApplicationRecord
   #   Authors (and their emails) of this module.  Usually includes the original discoverer who wrote the
   #   proof-of-concept and then the people that ported the proof-of-concept to metasploit-framework.
   #
-  #   @return [ActiveRecord::Relation<Mdm::Module::Mixin>]
+  #   @return [ActiveRecord::Relation<Mdm::Module::Author>]
   has_many :authors,   :class_name => 'Mdm::Module::Author',   :dependent => :destroy
 
   # @!attribute [rw] matches
@@ -91,6 +91,13 @@ class Mdm::Module::Detail < ApplicationRecord
            :primary_key => :fullname,
            :foreign_key => :module_fullname,
            :inverse_of => :module_detail
+
+  # @!attribute [rw] notes
+  #   Notes for this module.
+  #
+  #   @return [ActiveRecord::Relation<Mdm::Module::Note>]
+  has_many :notes, :class_name => 'Mdm::Module::Note', :dependent => :destroy, inverse_of: :detail
+  accepts_nested_attributes_for :notes
 
   # @!attribute [rw] platforms
   #   Platforms supported by this module.
@@ -291,6 +298,7 @@ class Mdm::Module::Detail < ApplicationRecord
   validates_associated :archs
   validates_associated :authors
   validates_associated :mixins
+  # validates_associated :notes
   validates_associated :platforms
   validates_associated :refs
   validates_associated :targets
@@ -334,6 +342,10 @@ class Mdm::Module::Detail < ApplicationRecord
   # @return [false] if save was unsuccessful.
   def add_mixin(name)
     self.mixins.build(:name => name).save
+  end
+
+  def add_note(name)
+    self.notes.build(:name => name).save
   end
 
   # Adds an {Mdm::Module::Platform} with the given {Mdm::Module::Platform#name} to {#platforms} and immediately saves it
@@ -382,6 +394,11 @@ class Mdm::Module::Detail < ApplicationRecord
     end
 
     supports_stance
+  end
+
+  def initialize(attributes = nil)
+    super
+    require 'pry'; binding.pry
   end
 
   Metasploit::Concern.run(self)
