@@ -26,7 +26,7 @@ on:
 
 jobs:
   build:
-    uses: rapid7/metasploit-framework/.github/workflows/shared_gem_verify_rails.yml@master
+    uses: dwelch-r7/metasploit-framework/.github/workflows/shared_gem_verify_rails.yml@7bb751ef79f508e83186b04196f9009c5a2bdb53
     with:
       dependencies: '["libpcap-dev"]'
       test_commands: |
